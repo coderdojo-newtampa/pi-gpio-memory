@@ -67,7 +67,6 @@ def blink(leds, timeOn, timeOff=0.0):
 # Shows current LED sequence by blinking each LED
 #
 def display():
-    print("Disp =>", ledSequence)
     for led in ledSequence:
         blink([led], ledWait, 0.3)
 
@@ -97,7 +96,6 @@ def readInput():
             if not gpio.input(btn):
                 buttons.append(btn)
 
-        print("Buttons pressed =>", buttons)
         if (len(buttons) == 1):
             done = True
             btn = buttons[0]
@@ -115,7 +113,7 @@ def readInput():
 #
 
 setup()
-animate(5, 0.1)
+animate(7, 0.1)
 
 while not gameOver:
     time.sleep(0.5)
@@ -124,8 +122,14 @@ while not gameOver:
 
     for led in ledSequence:
         button = readInput()
-        blink([led], ledWait, 0.3)
  
-        if (led != button):
+        if (led == button):
+            blink([button], 0.5, 0.2)
+        else:
+            blink([button], ledWait, 0.1)
             gameOver = True
             animate(3, 0.3)
+            break
+
+print("Your score is [%d], thank you for playing" % (len(ledSequence)-1))
+gpio.cleanup()
